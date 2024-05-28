@@ -1,0 +1,35 @@
+job('ejemplo-job-DSL') {
+  description('Job DSL de ejemplo para el curso de Jenkins')
+   
+  parameters {
+  	stringParam('nombre', defaultValue = 'Cuende', description = 'Parametro de cadena del job')
+    choiceParam('Ciudad', ['Salamanca', 'Madrid', 'Barcelona', 'Almeria', 'Cadiz'])
+    booleanParam('ciudadano', false)
+  }
+  triggers {
+    cron('H/7 * * * *')
+  }
+  steps {
+    shell("jobscript.sh")
+  }
+  publishers {
+    mailer('macloujulian@gmail.com', true, true)
+    slackNotifier {
+      notifyAborted(true)
+      notifyEveryFailure(true)
+      notifyNotBuilt(false)
+      notifyUnstable(false)
+      notifyBackToNormal(true)
+      notifySuccess(false)
+      notifyRepeatedFailure(false)
+      startNotification(false)
+      includeTestSummary(false)
+      includeCustomMessage(false)
+      customMessage(null)
+      sendAs(null)
+      commitInfoChoice('NONE')
+      teamDomain(null)
+      authToken(null)
+    }
+  }
+}
